@@ -81,21 +81,24 @@ class DblTools(commands.Cog):
             await client.get_guild_count()
         except (dbl.Unauthorized, dbl.UnauthorizedDetected):
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 "[DblTools cog]\n" + error_message.format(intro_msg)
             )
+            return
         except dbl.NotFound:
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 _(
                     "[DblTools cog]\nThis bot doesn't seem to be validated on Top.gg. Please try again with a validated bot."
                 )
             )
+            return
         except dbl.errors.HTTPException:
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 _("[DblTools cog]\nFailed to contact Top.gg API. Please try again later.")
             )
+            return
         self.dbl = client
         self._ready_event.set()
 
@@ -136,22 +139,25 @@ class DblTools(commands.Cog):
             await client.get_guild_count()
         except (dbl.Unauthorized, dbl.UnauthorizedDetected):
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 "[DblTools cog]\n"
                 + error_message.format(_("A wrong token has been set for dbltools cog.\n\n"))
             )
+            return
         except dbl.NotFound:
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 _(
                     "[DblTools cog]\nThis bot doesn't seem to be validated on Top.gg. Please try again with a validated bot."
                 )
             )
+            return
         except dbl.errors.HTTPException:
             await client.close()
-            return await self.bot.send_to_owners(
+            await self.bot.send_to_owners(
                 _("[DblTools cog]\nFailed to contact Top.gg API. Please try again later.")
             )
+            return
         self.dbl = client
         self._ready_event.set()
 

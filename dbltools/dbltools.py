@@ -24,10 +24,8 @@ from datetime import datetime, timedelta
 
 from .utils import check_weekend, download_widget, error_message, intro_msg
 
-
 log = logging.getLogger("red.predacogs.DblTools")
 _ = Translator("DblTools", __file__)
-
 
 @cog_i18n(_)
 class DblTools(commands.Cog):
@@ -86,7 +84,7 @@ class DblTools(commands.Cog):
             await client.close()
             return await self.bot.send_to_owners(
                 _(
-                    "[DblTools cog]\nThis bot seems doesn't seems be validated on Top.gg. Please try again with a validated bot."
+                    "[DblTools cog]\nThis bot doesn't seem to be validated on Top.gg. Please try again with a validated bot."
                 )
             )
         except dbl.errors.HTTPException:
@@ -142,7 +140,7 @@ class DblTools(commands.Cog):
             await client.close()
             return await self.bot.send_to_owners(
                 _(
-                    "[DblTools cog]\nThis bot seems doesn't seems be validated on Top.gg. Please try again with a validated bot."
+                    "[DblTools cog]\nThis bot doesn't seem to be validated on Top.gg. Please try again with a validated bot."
                 )
             )
         except dbl.errors.HTTPException:
@@ -177,7 +175,7 @@ class DblTools(commands.Cog):
                 await self.bot.send_to_owners(
                     _(
                         "It seems that I no longer have permissions to add roles for Top.gg upvoters "
-                        "in {} `{}`. Role rewards has been disabled."
+                        "in {} `{}`. Role rewards have been disabled."
                     ).format(member.guild, member.guild.id)
                 )
                 async with self.config.all() as config:
@@ -229,11 +227,11 @@ class DblTools(commands.Cog):
 
     @dailyrewards.command()
     async def toggle(self, ctx: commands.Context):
-        """Set wether you want [p]daily command usable or not."""
+        """Set whether you want [p]daily command usable or not."""
         if not await bank.is_global():
             return await ctx.send(
                 _(
-                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                    "The bot's bank needs to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
                 ).format(ctx.clean_prefix)
             )
         toggled = await self.config.daily_rewards.get_raw("toggled")
@@ -247,7 +245,7 @@ class DblTools(commands.Cog):
         if not await bank.is_global():
             return await ctx.send(
                 _(
-                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                    "The bot's bank needs to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
                 ).format(ctx.clean_prefix)
             )
         if not amount:
@@ -263,7 +261,7 @@ class DblTools(commands.Cog):
         if not await bank.is_global():
             return await ctx.send(
                 _(
-                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                    "The bot's bank needs to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
                 ).format(ctx.clean_prefix)
             )
         toggled = await self.config.daily_rewards.get_raw("weekend_bonus_toggled")
@@ -277,7 +275,7 @@ class DblTools(commands.Cog):
         if not await bank.is_global():
             return await ctx.send(
                 _(
-                    "The bot's bank need to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
+                    "The bot's bank needs to be global to use this feature.\nPlease use `{prefix}bankset toggleglobal` and try again."
                 ).format(ctx.clean_prefix)
             )
         if not amount:
@@ -366,20 +364,20 @@ class DblTools(commands.Cog):
                 ),
                 "dbl_page": _("[Top.gg Page]({})").format(f"https://top.gg/bot/{bot.id}"),
                 "invitation": (
-                    _(" • [Invitation link]({})").format(data["invite"])
+                    _("  [Invitation link]({})").format(data["invite"])
                     if data.get("invite")
                     else ""
                 ),
                 "support_server": (
-                    _(" • [Support](https://discord.gg/{})").format(data["support"])
+                    _("  [Support](https://discord.gg/{})").format(data["support"])
                     if data.get("support")
                     else ""
                 ),
                 "github": (
-                    _(" • [GitHub]({})").format(data["github"]) if data.get("github") else ""
+                    _("  [GitHub]({})").format(data["github"]) if data.get("github") else ""
                 ),
                 "website": (
-                    _(" • [Website]({})").format(data["website"]) if data.get("website") else ""
+                    _("  [Website]({})").format(data["website"]) if data.get("website") else ""
                 ),
             }
             description = [field for field in list(fields.values())]
@@ -465,7 +463,7 @@ class DblTools(commands.Cog):
         if len(embeds) > 1:
             await menu(ctx, embeds, DEFAULT_CONTROLS)
         else:
-            await ctx.send(embed=em)
+            await ctx.send(embed=embeds[0])
 
     @commands.command()
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -477,7 +475,7 @@ class DblTools(commands.Cog):
         if not await bank.is_global():
             return await ctx.send(
                 _(
-                    "The bot's bank need to be global to use this feature. It can be fixed by bot owner."
+                    "The bot's bank needs to be global to use this feature. It can be fixed by the bot owner."
                 ).format(ctx.clean_prefix)
             )
         author = ctx.author
@@ -486,7 +484,7 @@ class DblTools(commands.Cog):
         if cur_time <= next_daily:
             delta = humanize_timedelta(seconds=next_daily - cur_time) or "1 second"
             msg = author.mention + _(
-                " Too soon!\nYou have already claim your daily reward!\n"
+                " Too soon!\nYou have already claimed your daily reward!\n"
                 "Wait **{}** for the next one."
             ).format(delta)
             if not await ctx.embed_requested():
@@ -505,7 +503,7 @@ class DblTools(commands.Cog):
         if not check_vote:
             maybe_weekend_bonus = ""
             if weekend:
-                maybe_weekend_bonus = _(" and the week-end bonus of {} {}").format(
+                maybe_weekend_bonus = _(" and the weekend bonus of {} {}").format(
                     humanize_number(config["daily_rewards"]["weekend_bonus_amount"]), credits_name
                 )
             title = _(
@@ -544,7 +542,7 @@ class DblTools(commands.Cog):
         pos = await bank.get_leaderboard_position(author)
         await self.config.user(author).next_daily.set(next_vote)
         maybe_weekend_bonus = (
-            _("\nAnd your week-end bonus, +{}!").format(humanize_number(weekend_amount))
+            _("\nAnd your weekend bonus, +{}!").format(humanize_number(weekend_amount))
             if weekend
             else ""
         )

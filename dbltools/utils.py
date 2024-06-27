@@ -4,9 +4,7 @@ import aiohttp
 from io import BytesIO
 from datetime import datetime
 
-
 _ = Translator("DblTools", __file__)
-
 
 intro_msg = _(
     "To use that cog, you need a Top.gg token. "
@@ -24,10 +22,8 @@ error_message = _(
     "**6.** There you go! You can now use DblTools cog."
 )
 
-
 def check_weekend():
     return True if datetime.today().weekday() in [4, 5, 6] else False
-
 
 async def download_widget(session: aiohttp.ClientSession, url: str):
     async with session.get(url) as resp:

@@ -72,6 +72,10 @@ class DblTools(commands.Cog):
     async def initialize(self):
         await self.bot.wait_until_ready()
         key = (await self.bot.get_shared_api_tokens("dbl")).get("api_key")
+        if not key:
+            log.error("No Top.gg API key found. Please set it using [p]set api dbl api_key <key>.")
+            return
+
         try:
             client = dbl.DBLClient(self.bot, key, session=self.session)
             await client.get_guild_count()
@@ -113,7 +117,7 @@ class DblTools(commands.Cog):
                 try:
                     await self.dbl.post_guild_count()
                     log.info(
-                        "Posted server count to Top.gg {} servers.".format(self.dbl.guild_count())
+                        "Posted server count to Top.gg: {} servers.".format(self.dbl.guild_count())
                     )
                 except Exception as error:
                     log.exception(
@@ -127,7 +131,7 @@ class DblTools(commands.Cog):
             return
         try:
             if self.dbl:
-                self.dbl.close()
+                await self.dbl.close()
             client = dbl.DBLClient(self.bot, api_tokens.get("api_key"), session=self.session)
             await client.get_guild_count()
         except (dbl.Unauthorized, dbl.UnauthorizedDetected):
@@ -455,7 +459,7 @@ class DblTools(commands.Cog):
             )
             em.set_footer(
                 text=_("Page {}/{}").format(
-                    humanize_number(pages), humanize_number((math.ceil(len(msg) / 1300)))
+                    humanize_number(pages), humanize_number(math.ceil(len(msg) / 1300))
                 )
             )
             pages += 1
@@ -567,3 +571,6 @@ class DblTools(commands.Cog):
             )
             em.set_footer(text=footer)
             await ctx.send(embed=em)
+
+async def setup(bot: Red):
+    await bot.add_cog(DblTools(bot))
